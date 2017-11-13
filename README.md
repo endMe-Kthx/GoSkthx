@@ -1,2 +1,2 @@
-# Vayne
+# GoS Scripts
 Learning lua, kthx
