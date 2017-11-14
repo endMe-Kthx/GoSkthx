@@ -8,7 +8,7 @@ VayneMenu:Menu("Combo", "Combo")
 VayneMenu.Combo:Menu("Q", "Tumble (Q)")
 VayneMenu.Combo.Q:DropDown("Mode", "Mode", 1, {"Reset", "Normal"})
 VayneMenu.Combo.Q:Boolean("Enabled", "Enabled", true)
-VayneMenu.Combo.Q:Boolean("KeepInvis", "Don't AA While Stealthed (this is bugged, recommended Off until fix)", true)
+VayneMenu.Combo.Q:Boolean("KeepInvis", "Don't AA While Stealthed/bugget better keep turned off", true)
 VayneMenu.Combo.Q:Slider("KeepInvisdis", "Only if Distance <", 230, 0, 550, 1)
 
 VayneMenu.Combo:Menu("E", "Condemn (E)")
@@ -105,9 +105,9 @@ OnTick(function(myHero)
 		---- bug with this, doesn't go back to attacking if still in KeepInvisdis but not invisible[
     if IsStealthed then
 		IOW.attacksEnabled = false
-		elseif ValidTarget(target, 660) and GetDistance(target) > VayneMenu.Combo.Q.KeepInvisdis:Value() then 
+		if ValidTarget(target, 660) and GetDistance(target) > VayneMenu.Combo.Q.KeepInvisdis:Value() then --- maybe should add (or not IsStealthed) here
 			IOW.attacksEnabled = true
-		if not IsStealthed then
+		elseif not IsStealthed then
 			IOW.attacksEnabled = true
 		end
 	end
@@ -170,4 +170,3 @@ AddGapcloseEvent(_E, 550, true, VayneMenu)
 PrintChat(string.format("<font color='#1244EA'>Vayne:</font> <font color='#FFFFFF'> Script Loaded! </font>"))
 PrintChat("Have Fun: " ..GetObjectBaseName(myHero)) 
 PrintChat("This Script Was Originally Made By Deftsu, Now Revamped And Updated By Some Dumb Fuck, kthx")
-PrintChat("If an error that says there's a problem with GetObjectName, don't mind it, will fix soon")
