@@ -8,7 +8,7 @@ VayneMenu:Menu("Combo", "Combo")
 VayneMenu.Combo:Menu("Q", "Tumble (Q)")
 VayneMenu.Combo.Q:DropDown("Mode", "Mode", 1, {"Reset", "Normal"})
 VayneMenu.Combo.Q:Boolean("Enabled", "Enabled", true)
-VayneMenu.Combo.Q:Boolean("KeepInvis", "Don't AA While Stealthed", true)
+VayneMenu.Combo.Q:Boolean("KeepInvis", "Don't AA While Stealthed (this is bugged, recommended Off until fix)", true)
 VayneMenu.Combo.Q:Slider("KeepInvisdis", "Only if Distance <", 230, 0, 550, 1)
 
 VayneMenu.Combo:Menu("E", "Condemn (E)")
@@ -102,22 +102,23 @@ OnTick(function(myHero)
         CastSpell(_R)
 	end
 	
-		
-        if IsStealthed and target ~= nil and GetDistance(target) > VayneMenu.Combo.Q.KeepInvisdis:Value() then
-	IOW.attacksEnabled = true
-	elseif not IsStealthed then
-	IOW.attacksEnabled = true
-	elseif IsStealthed and VayneMenu.Combo.Q.KeepInvis:Value() and target ~= nil and GetDistance(target) < VayneMenu.Combo.Q.KeepInvisdis:Value() then 
-	IOW.attacksEnabled = false
+		---- bug with this, doesn't go back to attacking if still in KeepInvisdis but not invisible[
+    if IsStealthed then
+		IOW.attacksEnabled = false
+		elseif ValidTarget(target, 660) and GetDistance(target) > VayneMenu.Combo.Q.KeepInvisdis:Value() then 
+			IOW.attacksEnabled = true
+		if not IsStealthed then
+			IOW.attacksEnabled = true
+		end
 	end
-	
+	   --- the bug is between those comments]
    end
 
 
-   for i,enemy in pairs(GetEnemyHeroes()) do
+	for i,enemy in pairs(GetEnemyHeroes()) do
         
         if IOW:Mode() == "Combo" then	
-	  if BRK and IsReady(BRK) and VayneMenu.Combo.Items:Value() and ValidTarget(enemy, 550) and GetPercentHP(myHero) < VayneMenu.Combo.myHP:Value() and GetPercentHP(enemy) > VayneMenu.Combo.targetHP:Value() then
+		  if BRK and IsReady(BRK) and VayneMenu.Combo.Items:Value() and ValidTarget(enemy, 550) and GetPercentHP(myHero) < VayneMenu.Combo.myHP:Value() and GetPercentHP(enemy) > VayneMenu.Combo.targetHP:Value() then
           CastTargetSpell(enemy, BRK)
           end
 
@@ -126,17 +127,15 @@ OnTick(function(myHero)
           end	
         end
         
-	  end
+	end
         
-	if IsReady(_E) and VayneMenu.Misc.EMenu[GetObjectName(enemy).."Pleb"]:Value() and ValidTarget(enemy, 710) then
+	if IsReady(_E) and VayneMenu.Misc.EMenu[GetObjectName(enemy).."Pleb"]:Value() and ValidTarget(enemy, 710) then --- expected user data or some shit idk? problem with GetObjectName
         StunThisPleb(enemy)
-        end
+    end
 
-        if IsReady(_E) and VayneMenu.Misc.lowhp:Value() and GetPercentHP(myHero) <= 15 and ValidTarget(enemy,375) then
+    if IsReady(_E) and VayneMenu.Misc.lowhp:Value() and GetPercentHP(myHero) <= 15 and ValidTarget(enemy,375) then
         CastTargetSpell(enemy, _E)
-        end
-
-   end
+    end
 
 end)
 
@@ -170,4 +169,5 @@ AddGapcloseEvent(_E, 550, true, VayneMenu)
 
 PrintChat(string.format("<font color='#1244EA'>Vayne:</font> <font color='#FFFFFF'> Script Loaded! </font>"))
 PrintChat("Have Fun: " ..GetObjectBaseName(myHero)) 
-PrintChat("This Script Was Originally Made By Deftsu, Now Revamped And Updated By Some Dumb Fuck, ktx")
+PrintChat("This Script Was Originally Made By Deftsu, Now Revamped And Updated By Some Dumb Fuck, kthx")
+PrintChat("If an error that says there's a problem with GetObjectName, don't mind it, will fix soon")
