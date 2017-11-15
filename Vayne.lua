@@ -28,7 +28,7 @@ VayneMenu.Combo:Slider("myHP", "if HP % <", 50, 0, 100, 1)
 VayneMenu.Combo:Slider("targetHP", "if Target HP % >", 20, 0, 100, 1)
 
 VayneMenu:Menu("Misc", "Misc")
-VayneMenu.Misc:Menu("EMenu", "AutoStun")
+VayneMenu.Misc:Menu("EMenu", "AutoStun / disabled.") --lines 46-48 and lines 132-134
 VayneMenu.Misc:Boolean("lowhp", "Peel with E when low health", true)
 
 VayneMenu:Menu("Interrupt", "Interrupt (E)")
@@ -43,9 +43,9 @@ DelayAction(function()
     end
   end
   
-  for _,k in pairs(GetEnemyHeroes()) do
-  VayneMenu.Misc.EMenu:Boolean(GetObjectName(k).."Pleb", ""..GetObjectName(k).."", true)
-  end
+  --for _,k in pairs(GetEnemyHeroes()) do
+  --VayneMenu.Misc.EMenu:Boolean(GetObjectName(k).."Pleb", ""..GetObjectName(k).."", true)
+  --end
 end, 1)
  
 OnProcessSpell(function(unit, spell)
@@ -94,7 +94,7 @@ OnTick(function(myHero)
           end
         end
 		
-	if IsReady(_E) and VayneMenu.Combo.E.Enabled:Value() and ValidTarget(target, 710) then
+		if IsReady(_E) and VayneMenu.Combo.E.Enabled:Value() and ValidTarget(target, 710) then
         StunThisPleb(target)
         end
 
@@ -129,11 +129,11 @@ OnTick(function(myHero)
         
 	end
         
-	if IsReady(_E) and VayneMenu.Misc.EMenu[GetObjectName(enemy).."Pleb"]:Value() and ValidTarget(enemy, 710) then --- expected user data or some shit idk? problem with GetObjectName
-        StunThisPleb(enemy)
-    end
+	--if IsReady(_E) and VayneMenu.Misc.EMenu[GetObjectName(enemy).."Pleb"]:Value() and ValidTarget(enemy, 710) then --- expected user data or some shit idk? problem with GetObjectName
+    --    StunThisPleb(enemy)
+    --end
 
-    if IsReady(_E) and VayneMenu.Misc.lowhp:Value() and GetPercentHP(myHero) <= 15 and ValidTarget(enemy,375) then
+    if IsReady(_E) and VayneMenu.Misc.lowhp:Value() and GetPercentHP(myHero) <= 15 and ValidTarget(enemy,375) and getDistance(enemy) < 351   then
         CastTargetSpell(enemy, _E)
     end
 
